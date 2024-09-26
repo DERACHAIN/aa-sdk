@@ -18,7 +18,7 @@ or using npm
 npm i @derachain/aa-sdk
 ```
 
-**Note:** node version should be greater than 16.14
+**Note:** node version should be greater than v20 LTS
 
 ## Quick start
 
