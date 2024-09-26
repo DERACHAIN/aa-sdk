@@ -35,36 +35,43 @@ export class DeraChainSmartAccountV2 {
     index: number,
     isSponsor: boolean = false
   ): Promise<BiconomySmartAccountV2Config> {
-    const ecdsaModule = await createECDSAOwnershipValidationModule({
-      moduleAddress: ADDRESSES.ECDSA_MODULE,
-      signer: client,
-    });
+    try {
+      const ecdsaModule = await createECDSAOwnershipValidationModule({
+        moduleAddress: ADDRESSES.ECDSA_MODULE,
+        signer: client,
+      });
 
-    const config: BiconomySmartAccountV2Config = {
-      customChain: chain,
-      factoryAddress: ADDRESSES.SMART_ACCOUNT_FACTORY,
-      implementationAddress: ADDRESSES.SMART_ACCOUNT_IMPLEMENTATION,
-      defaultFallbackHandler: ADDRESSES.FACTORY_CALLBACK_HANDLER,
-      signer: client,
-      chainId: deraChainId,
-      bundler: new Bundler({
+      const config: BiconomySmartAccountV2Config = {
         customChain: chain,
-        entryPointAddress: ADDRESSES.ENTRY_POINT,
-        bundlerUrl: URLS.BUNDLER,
+        factoryAddress: ADDRESSES.SMART_ACCOUNT_FACTORY,
+        implementationAddress: ADDRESSES.SMART_ACCOUNT_IMPLEMENTATION,
+        defaultFallbackHandler: ADDRESSES.FACTORY_CALLBACK_HANDLER,
+        signer: client,
         chainId: deraChainId,
-      }),
-      defaultValidationModule: ecdsaModule,
-      entryPointAddress: ADDRESSES.ENTRY_POINT,
-      index,
-    };
+        bundler: new Bundler({
+          customChain: chain,
+          entryPointAddress: ADDRESSES.ENTRY_POINT,
+          bundlerUrl: URLS.BUNDLER,
+          chainId: deraChainId,
+        }),
+        defaultValidationModule: ecdsaModule,
+        entryPointAddress: ADDRESSES.ENTRY_POINT,
+        index,
+      };
 
-    if (isSponsor) {
-      config.paymaster = new BiconomyPaymaster({paymasterUrl: URLS.PAYMASTER});
-      config.rpcUrl = URLS.RPC;
-      config.activeValidationModule = ecdsaModule;
+      if (isSponsor) {
+        config.paymaster = new BiconomyPaymaster({
+          paymasterUrl: URLS.PAYMASTER,
+        });
+        config.rpcUrl = URLS.RPC;
+        config.activeValidationModule = ecdsaModule;
+      }
+
+      return config;
+    } catch (error) {
+      console.error('Error creating default config:', error);
+      throw error;
     }
-
-    return config;
   }
 
   public static async createSmartAccount(
@@ -74,20 +81,25 @@ export class DeraChainSmartAccountV2 {
     networkType?: 'mainnet' | 'testnet',
     config?: Partial<BiconomySmartAccountV2Config>
   ): Promise<BiconomySmartAccountV2> {
-    const chain: Chain = config?.customChain ?? DERACHAIN_TESTNET;
-    const client = createWalletClient({
-      account: privateKeyToAccount(privateKey),
-      chain,
-      transport: http(),
-    });
+    try {
+      const chain: Chain = config?.customChain ?? DERACHAIN_TESTNET;
+      const client = createWalletClient({
+        account: privateKeyToAccount(privateKey),
+        chain,
+        transport: http(),
+      });
 
-    const defaultConfig = await DeraChainSmartAccountV2.createDefaultConfig(
-      chain,
-      client,
-      index,
-      isSponsor
-    );
-    return createSmartAccountClient({...defaultConfig, ...config});
+      const defaultConfig = await DeraChainSmartAccountV2.createDefaultConfig(
+        chain,
+        client,
+        index,
+        isSponsor
+      );
+      return createSmartAccountClient({...defaultConfig, ...config});
+    } catch (error) {
+      console.error('Error creating smart account:', error);
+      throw error;
+    }
   }
 
   /**
@@ -102,43 +114,43 @@ export class DeraChainSmartAccountV2 {
     userOps: Array<{toAddress: string; data?: string; value?: string}>,
     isSponsor: boolean = false
   ) {
-    const transactions = userOps.map(
-      ({toAddress, data, value}) =>
-        ({to: toAddress, data, value} as Transaction)
-    );
-
-    if (!isSponsor) {
-      const userOpResponse = await smartAccount.sendTransaction(transactions);
-      return await userOpResponse.wait();
-    }
-
-    let partialUserOp = await smartAccount.buildUserOp(transactions);
-    const biconomyPaymaster =
-      smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
-
-    const paymasterServiceData: SponsorUserOperationDto = {
-      mode: PaymasterMode.SPONSORED,
-      smartAccountInfo: {name: 'BICONOMY', version: '2.0.0'},
-      calculateGasLimits: true,
-    };
-
-    const paymasterAndDataResponse =
-      await biconomyPaymaster.getPaymasterAndData(
-        partialUserOp,
-        paymasterServiceData
+    try {
+      const transactions = userOps.map(
+        ({toAddress, data, value}) =>
+          ({to: toAddress, data, value} as Transaction)
       );
 
-    // we should override verificationGasLimit only, left other gas params as it is
-    if (paymasterAndDataResponse.verificationGasLimit) {
-      // Returned gas limits must be replaced in your op as you update paymasterAndData.
-      // Because these are the limits paymaster service signed on to generate paymasterAndData
-      // If you receive AA34 error check here..
+      if (!isSponsor) {
+        const userOpResponse = await smartAccount.sendTransaction(transactions);
+        return await userOpResponse.wait();
+      }
 
-      partialUserOp.verificationGasLimit =
-        paymasterAndDataResponse.verificationGasLimit;
+      let partialUserOp = await smartAccount.buildUserOp(transactions);
+      const biconomyPaymaster =
+        smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
+
+      const paymasterServiceData: SponsorUserOperationDto = {
+        mode: PaymasterMode.SPONSORED,
+        smartAccountInfo: {name: 'BICONOMY', version: '2.0.0'},
+        calculateGasLimits: true,
+      };
+
+      const paymasterAndDataResponse =
+        await biconomyPaymaster.getPaymasterAndData(
+          partialUserOp,
+          paymasterServiceData
+        );
+
+      if (paymasterAndDataResponse.verificationGasLimit) {
+        partialUserOp.verificationGasLimit =
+          paymasterAndDataResponse.verificationGasLimit;
+      }
+
+      const userOpResponse = await smartAccount.sendUserOp(partialUserOp);
+      return await userOpResponse.wait();
+    } catch (error) {
+      console.error('Error sending user operations:', error);
+      throw error;
     }
-
-    const userOpResponse = await smartAccount.sendUserOp(partialUserOp);
-    return await userOpResponse.wait();
   }
 }
