@@ -77,7 +77,7 @@ export class DeraChainSmartAccountV2 {
   public static async createSmartAccount(
     index: number = 0,
     privateKey: `0x${string}`,
-    isSponsor: boolean = false,
+    isSponsor: boolean = true,
     networkType?: 'mainnet' | 'testnet',
     config?: Partial<BiconomySmartAccountV2Config>
   ): Promise<BiconomySmartAccountV2> {

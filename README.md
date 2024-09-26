@@ -28,13 +28,13 @@ import {createSmartAccountClient, sendUserOps} from '@derachain/aa-sdk';
 const smartAccount = await createSmartAccountClient(
   index, // Index to create new Smart Account
   privateKey, // Private key for the account
-  true // Optional: Set to true if using paymaster
+  true // Optional default true: Set to true if using paymaster
 );
 
 const userOpReceipt = await sendUserOps(
   smartAccount,
   {to: '0x...', value: 1},
-  true // Optional: Set to true if using paymaster
+  false // Optional default false: Set to true if using paymaster
 );
 
 const {
