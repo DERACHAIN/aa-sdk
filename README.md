@@ -23,14 +23,22 @@ npm i @derachain/aa-sdk
 ## Quick start
 
 ```typescript
-import {createSmartAccountClient} from '@derachain/aa-sdk';
+import {createSmartAccountClient, sendUserOps} from '@derachain/aa-sdk';
 
-const smartAccount = await createSmartAccountClient(index, privateKey);
+const smartAccount = await createSmartAccountClient(
+  index, // Index to create new Smart Account
+  privateKey, // Private key for the account
+  true // Optional: Set to true if using paymaster
+);
 
-const {wait} = await smartAccount.sendTransaction({to: '0x...', value: 1});
+const userOpReceipt = await sendUserOps(
+  smartAccount,
+  {to: '0x...', value: 1},
+  true // Optional: Set to true if using paymaster
+);
 
 const {
   receipt: {transactionHash},
   success,
-} = await wait();
+} = userOpReceipt;
 ```
