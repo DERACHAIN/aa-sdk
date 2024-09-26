@@ -5,9 +5,7 @@ import {
   Bundler,
   createECDSAOwnershipValidationModule,
   createSmartAccountClient,
-  IHybridPaymaster,
   PaymasterMode,
-  SponsorUserOperationDto,
   Transaction,
 } from '@biconomy/account';
 import {Chain, createWalletClient, http} from 'viem';
@@ -120,34 +118,17 @@ export class DeraChainSmartAccountV2 {
           ({to: toAddress, data, value} as Transaction)
       );
 
-      if (!isSponsor) {
-        const userOpResponse = await smartAccount.sendTransaction(transactions);
-        return await userOpResponse.wait();
-      }
-
-      let partialUserOp = await smartAccount.buildUserOp(transactions);
-      const biconomyPaymaster =
-        smartAccount.paymaster as IHybridPaymaster<SponsorUserOperationDto>;
-
-      const paymasterServiceData: SponsorUserOperationDto = {
-        mode: PaymasterMode.SPONSORED,
-        smartAccountInfo: {name: 'BICONOMY', version: '2.0.0'},
-        calculateGasLimits: true,
-      };
-
-      const paymasterAndDataResponse =
-        await biconomyPaymaster.getPaymasterAndData(
-          partialUserOp,
-          paymasterServiceData
-        );
-
-      if (paymasterAndDataResponse.verificationGasLimit) {
-        partialUserOp.verificationGasLimit =
-          paymasterAndDataResponse.verificationGasLimit;
-      }
-
-      const userOpResponse = await smartAccount.sendUserOp(partialUserOp);
-      return await userOpResponse.wait();
+      return await smartAccount.sendTransaction(
+        transactions,
+        isSponsor
+          ? {
+              paymasterServiceData: {
+                mode: PaymasterMode.SPONSORED,
+                calculateGasLimits: false,
+              },
+            }
+          : undefined
+      );
     } catch (error) {
       console.error('Error sending user operations:', error);
       throw error;
