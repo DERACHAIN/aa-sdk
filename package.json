@@ -1,6 +1,6 @@
 {
   "name": "@derachain/aa-sdk",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "author": "DareNFT",
   "description": "SDK for Account Abstraction integration on DERA chain with support for smart accounts, user operations, bundler service, paymaster service that comply with ERC-4337.",
   "engines": {
@@ -14,11 +14,11 @@
     "registry": "https://npm.pkg.github.com"
   },
   "keywords": [
-    "darenft",
-    "sdk",
-    "nft2",
-    "client",
-    "client library"
+    "derachain",
+    "account abstraction",
+    "eip 4337",
+    "web3 ux",
+    "aa sdk"
   ],
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
