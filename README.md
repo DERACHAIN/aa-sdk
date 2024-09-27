@@ -31,11 +31,14 @@ const smartAccount = await createSmartAccountClient(
   true // Optional default true: Set to true if using paymaster
 );
 
-const userOpReceipt = await sendUserOps(
+// Send transaction
+const userOpResponse = await sendUserOps(
   smartAccount,
   {to: '0x...', value: 1},
   false // Optional default false: Set to true if using paymaster
 );
+
+const userOpReceipt = await userOpResponse.wait();
 
 const {
   receipt: {transactionHash},
