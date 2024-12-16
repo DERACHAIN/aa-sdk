@@ -13,12 +13,12 @@ export const DERACHAIN_TESTNET = defineChain({
   rpcUrls: {
     default: {
       http: [
-        'https://rpc-testnet.derachain.com/ext/bc/2WMFYSdPEx6LR3gsQfQtiezMwSUijqxuPa61wVE66rnc2aHKL6/rpc',
+        'http://nodetest2.derachain.com/ext/bc/KMwFBA2huCenWBTf4k6oWZE23HozsX1Yw5ay7LWN4CWcRqKHU/rpc',
       ],
       // webSocket: ['ws://125.212.226.160:6950/ext/bc/darechain1/rpc'],
     },
   },
   blockExplorers: {
-    default: {name: 'Explorer', url: 'https://trace.derachain.com'},
+    default: {name: 'Explorer', url: 'https://testnet.derachain.com'},
   },
 });

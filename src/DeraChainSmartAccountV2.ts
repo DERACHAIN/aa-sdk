@@ -10,20 +10,20 @@ import {
 } from '@biconomy/account';
 import {Chain, createWalletClient, http} from 'viem';
 import {privateKeyToAccount} from 'viem/accounts';
-import {DERACHAIN_TESTNET, deraChainId} from './consts';
+import {DERACHAIN_TESTNET} from './consts';
 
 const URLS = {
   BUNDLER: 'https://bundler.derachain.com/api/v2/20240801/x',
   PAYMASTER: 'https://bundler.derachain.com/paymaster/api/v1/20240801/x',
-  RPC: 'https://rpc-testnet.derachain.com/ext/bc/2WMFYSdPEx6LR3gsQfQtiezMwSUijqxuPa61wVE66rnc2aHKL6/rpc',
+  RPC: 'http://nodetest2.derachain.com/ext/bc/KMwFBA2huCenWBTf4k6oWZE23HozsX1Yw5ay7LWN4CWcRqKHU/rpc',
 };
 
 const ADDRESSES = {
-  ENTRY_POINT: '0x35e0527306D14d9Ce579e61F261a6BEd4b68aF28',
-  ECDSA_MODULE: '0xa5E364EEd03E7639eF79b760Af1e8438b389ede5',
-  SMART_ACCOUNT_FACTORY: '0x3e23dD121c2529EA6f6Db030Ed2Ca4Fecc10da3b',
-  SMART_ACCOUNT_IMPLEMENTATION: '0xe0Eb16F4A5a39C0331982e8400F01F077AA21Fd9',
-  FACTORY_CALLBACK_HANDLER: '0xB3D4f8CEDA8e450923e6b0b544AC38e330e4AAc4',
+  ENTRY_POINT: '0x3841143055dB2E292075e6F282Aeb56657eA6235',
+  ECDSA_MODULE: '0x8e24C90f7b1212D6D0bA45c5834bB3fB016aAA48',
+  SMART_ACCOUNT_FACTORY: '0xc6a380A9F85cfe4B2E9dD76d0946bd89BFe55B29',
+  SMART_ACCOUNT_IMPLEMENTATION: '0xE27A0E456fd9A02eE00171fC00Dd6759Ce2C0E65',
+  FACTORY_CALLBACK_HANDLER: '0x75656641A77D68d16ba361EF7A0bdf6228597C7d',
 } as const;
 
 export class DeraChainSmartAccountV2 {
@@ -45,12 +45,12 @@ export class DeraChainSmartAccountV2 {
         implementationAddress: ADDRESSES.SMART_ACCOUNT_IMPLEMENTATION,
         defaultFallbackHandler: ADDRESSES.FACTORY_CALLBACK_HANDLER,
         signer: client,
-        chainId: deraChainId,
+        chainId: chain.id,
         bundler: new Bundler({
           customChain: chain,
           entryPointAddress: ADDRESSES.ENTRY_POINT,
           bundlerUrl: URLS.BUNDLER,
-          chainId: deraChainId,
+          chainId: chain.id,
         }),
         defaultValidationModule: ecdsaModule,
         entryPointAddress: ADDRESSES.ENTRY_POINT,
