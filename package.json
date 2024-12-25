@@ -1,6 +1,6 @@
 {
   "name": "@derachain/aa-sdk",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "author": "DareNFT",
   "description": "SDK for Account Abstraction integration on DERA chain with support for smart accounts, user operations, bundler service, paymaster service that comply with ERC-4337.",
   "engines": {

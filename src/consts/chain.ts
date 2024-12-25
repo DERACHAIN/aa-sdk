@@ -13,7 +13,7 @@ export const DERACHAIN_TESTNET = defineChain({
   rpcUrls: {
     default: {
       http: [
-        'https://rpc-test2.derachain.com/ext/bc/yMz6EoVVaYVUJDozWNtvvHddutUwK7Tfqd2z7nXoG7zydyHEJ/rpc',
+        'https://rpc-test1.derachain.com/ext/bc/KMwFBA2huCenWBTf4k6oWZE23HozsX1Yw5ay7LWN4CWcRqKHU/rpc',
       ],
       // webSocket: ['ws://125.212.226.160:6950/ext/bc/darechain1/rpc'],
     },
