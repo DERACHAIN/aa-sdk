@@ -1,6 +1,6 @@
 import {defineChain} from 'viem';
 
-export const deraChainId = 20240801;
+export const deraChainId = 20250111;
 
 export const DERACHAIN_TESTNET = defineChain({
   id: deraChainId,
@@ -13,7 +13,7 @@ export const DERACHAIN_TESTNET = defineChain({
   rpcUrls: {
     default: {
       http: [
-        'https://rpc-test1.derachain.com/ext/bc/KMwFBA2huCenWBTf4k6oWZE23HozsX1Yw5ay7LWN4CWcRqKHU/rpc',
+        'https://rpc-test3.derachain.com/ext/bc/A19HfLGD92ZbCUW6uycTM5N69BCR12JihXVp2qdDLw7Mev4Hg/rpc',
       ],
       // webSocket: ['ws://125.212.226.160:6950/ext/bc/darechain1/rpc'],
     },

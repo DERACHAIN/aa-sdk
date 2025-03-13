@@ -13,17 +13,17 @@ import {privateKeyToAccount} from 'viem/accounts';
 import {DERACHAIN_TESTNET} from './consts';
 
 const URLS = {
-  BUNDLER: 'https://bundler.derachain.com/api/v2/20240801/x',
-  PAYMASTER: 'https://bundler.derachain.com/paymaster/api/v1/20240801/x',
-  RPC: 'https://rpc-test1.derachain.com/ext/bc/KMwFBA2huCenWBTf4k6oWZE23HozsX1Yw5ay7LWN4CWcRqKHU/rpc',
+  BUNDLER: 'https://bundler.derachain.com/api/v2/20250111/x',
+  PAYMASTER: 'https://bundler.derachain.com/paymaster/api/v1/20250111/x',
+  RPC: 'https://rpc-test3.derachain.com/ext/bc/A19HfLGD92ZbCUW6uycTM5N69BCR12JihXVp2qdDLw7Mev4Hg/rpc',
 };
 
 const ADDRESSES = {
-  ENTRY_POINT: '0x3841143055dB2E292075e6F282Aeb56657eA6235',
-  ECDSA_MODULE: '0x8e24C90f7b1212D6D0bA45c5834bB3fB016aAA48',
-  SMART_ACCOUNT_FACTORY: '0xc6a380A9F85cfe4B2E9dD76d0946bd89BFe55B29',
-  SMART_ACCOUNT_IMPLEMENTATION: '0xE27A0E456fd9A02eE00171fC00Dd6759Ce2C0E65',
-  FACTORY_CALLBACK_HANDLER: '0x75656641A77D68d16ba361EF7A0bdf6228597C7d',
+  ENTRY_POINT: '0x20EDfa1CE1c711Fd227A1C387AaB5f0dc3426a5F',
+  ECDSA_MODULE: '0x12Fd051cCa7Cd01b7A498a71eFD6Bd728583A98F',
+  SMART_ACCOUNT_FACTORY: '0x8eb6E38f5D128d1333c632e776cd2564FE1BB780',
+  SMART_ACCOUNT_IMPLEMENTATION: '0xA1b41eEe9a32e589ff763a0e78fFDE25d56b9B41',
+  FACTORY_CALLBACK_HANDLER: '0xeb5d8F66cf9742faE0A3D9f597d272c452C1BfF6',
 } as const;
 
 export class DeraChainSmartAccountV2 {
